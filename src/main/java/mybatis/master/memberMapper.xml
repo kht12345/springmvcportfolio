@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member" >
+
+	<insert id="registerMember" parameterType="member"> 
+	<![CDATA[
+	INSERT INTO member VALUES(#{memberid}, #{password}, #{name}, #{address}, #{tel}, #{email}, #{regdate}, #{status})
+	]]>
+	</insert>
+		
+	<select id="findMemberById" parameterType="string" resultType="member"> 
+	<![CDATA[
+	SELECT memberid, password, name, address, tel, email, regdate, status 
+	FROM member
+	WHERE memberid=#{memberid}
+	]]>
+	</select>
+	
+	<select id="getMemberlist" resultType="member"> 
+	<![CDATA[
+	SELECT memberid, password, name, address, tel, email, regdate, status 
+	FROM member
+	]]>
+	</select>	
+	
+
+	
+</mapper>

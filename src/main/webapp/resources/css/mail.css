@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+form.email {
+  display: table;
+}
+
+div.email {
+  display: table-row;
+}
+
+label,input {
+  display: table-cell;
+  margin-bottom: 10px;
+}
+
+label {
+  padding-right: 10px;
+}
+
+#wrap {
+	width: 100%;
+	height: 500px;
+}
+textarea {
+	width: 100%;
+	height: 6.25em;
+	resize: none;
+}

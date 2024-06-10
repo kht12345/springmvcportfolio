@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<mvc:annotation-driven />
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+	<mvc:resources location="/resources/images/" mapping="/images/**" />
+	<mvc:resources location="/resources/css/" mapping="/css/**" />
+	<mvc:resources location="/resources/js/" mapping="/js/**" />
+		
+	<!-- @ResponseBody로 String 처리할때 한글처리 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+				
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<aop:aspectj-autoproxy />
+	
+	<tx:annotation-driven/>
+
+	<context:component-scan base-package="org.kitri.shoppingmall" />
+
+	<bean 
+		class="org.apache.commons.dbcp2.BasicDataSource" 
+		name="datasource" 
+		p:driverClassName="oracle.jdbc.OracleDriver" 
+		p:url="jdbc:oracle:thin:@192.168.10.5:1521:xe" 
+		p:username="oracle_test" p:password="woseven" />
+		
+	<bean 
+		class="org.mybatis.spring.SqlSessionFactoryBean" 
+		name="sqlSessionFactoryBean" 
+		p:dataSource-ref="datasource" 
+		p:mapperLocations="classpath:/mybatis/**/*.xml" 
+		p:typeAliasesPackage="org.kitri.shoppingmall.dto.*" />
+	
+	<bean 
+		class="org.mybatis.spring.SqlSessionTemplate" 
+		name="sqlSessionTemplate" 
+		c:sqlSessionFactory-ref="sqlSessionFactoryBean" />
+
+	<bean id="transactionManager" 
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+		p:dataSource-ref="datasource" />
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" 
+		c:brokerURL="tcp://localhost:61616" />
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory" 
+    	c:targetConnectionFactory-ref="amqConnectionFactory" />
+
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue" 
+    	c:name="activemq_spring_xml_annotations" />
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" 
+    	p:defaultDestination-ref="queueDestination" 
+    	p:connectionFactory-ref="connectionFactory" />
+
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer" 
+    	p:connectionFactory-ref="connectionFactory" 
+    	p:destinationName="activemq_spring_xml_annotations" 
+    	p:messageListener-ref="messageReceiver" />
+	
+	<bean name="viewresolver" 
+	class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+	p:prefix="/WEB-INF/views/" p:suffix=".jsp">
+	</bean>
+
+</beans>

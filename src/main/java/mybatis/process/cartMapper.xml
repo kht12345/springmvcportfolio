@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cart" >
+	<insert id="registercart" parameterType="cart"> 
+	<![CDATA[
+	INSERT INTO cart VALUES(#{cartno}, #{memberid}, #{regdate})
+	]]>
+	</insert>
+	
+	<insert id="registercartdetails" parameterType="cartdetails"> 
+	<![CDATA[
+	INSERT INTO cartdetails VALUES(#{seq}, #{cartno}, #{goodscd}, #{price}, #{salesquantity})
+	]]>
+	</insert>
+	
+	<select id="getcartno" parameterType="string" resultType="int">
+	<![CDATA[
+	SELECT nvl(max(cartno), 0) as cartno FROM cart
+	WHERE memberid=#{memberid}
+	]]>
+	</select>
+	
+	<select id="getmaxcartno" resultType="int">
+	<![CDATA[
+	SELECT nvl(max(cartno), 0) as cartno FROM cart
+	]]>
+	</select>
+	
+	
+	<select id="getseqno" parameterType="int" resultType="int">
+	<![CDATA[
+	SELECT nvl(max(seq), 0) as seq FROM cartdetails
+	WHERE cartno=#{cartno}
+	]]>
+	</select>
+	
+	<select id="getcart" parameterType="string" resultType="cartinfo">
+	<![CDATA[
+	SELECT a.cartno as cartno, a.memberid as memberid, b.seq as seq, b.goodscd as goodscd, b.price as price, b.salesquantity as salesquantity, a.regdate as regdate 
+	FROM cart a, cartdetails b
+	WHERE a.cartno = b. cartno
+	AND a.memberid=#{memberid}	
+	]]>
+	</select>
+	
+	<update id="updatecartdetailsgoods" parameterType="cartdetails">
+	<![CDATA[
+		UPDATE cartdetails 
+		SET price=#{price} 
+		WHERE goodscd=#{goodscd}
+	]]>
+	</update>
+			
+</mapper>

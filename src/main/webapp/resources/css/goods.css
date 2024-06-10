@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+form.member {
+  display: table;
+}
+
+div.member {
+  display: table-row;
+}
+
+label,input {
+  display: table-cell;
+  margin-bottom: 10px;
+}
+
+label {
+  padding-right: 10px;
+}
+
+#forbidden {
+	background-color: green;
+	color: white;
+}
+
+#bold {
+	font-weight: bold;
+}

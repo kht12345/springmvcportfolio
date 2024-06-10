@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="goods" >
+	<select id="findgoodslist" resultType="goods"> 
+	<![CDATA[
+	SELECT goodscd, goodsname, description, providercd, price, regdate
+	FROM goods
+	]]>
+	</select>
+	
+	<select id="findgoodsbygoodscd" parameterType="string" resultType="goods"> 
+	<![CDATA[
+	SELECT a.goodscd as goodscd, a.goodsname as goodsname, a.description as description, b.providername as providername, a.price as price, a.regdate as regdate
+	FROM goods a, provider b
+	WHERE goodscd=#{goodscd}
+	AND a.providercd = b.providercd
+	]]>
+	</select>
+	
+	<select id="findgoodsbysearch" parameterType="string" resultType="goods"> 
+	<![CDATA[
+	SELECT goodscd, goodsname, description, providercd, price, regdate
+	FROM goods
+	WHERE goodscd LIKE '%'||#{goodscd}||'%'
+	]]>
+	</select>
+	
+	<update id="updategoods" parameterType="goods">
+	<![CDATA[
+		UPDATE goods 
+		SET description=#{description}, price=#{price} 
+		WHERE goodscd=#{goodscd}
+	]]>
+	</update>
+	
+</mapper>

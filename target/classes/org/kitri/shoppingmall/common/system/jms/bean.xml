@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<context:component-scan base-package="org.kitri.jmstest" />
+	
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" 
+		c:brokerURL="tcp://localhost:61616" />
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory" 
+    	c:targetConnectionFactory-ref="amqConnectionFactory" />
+
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue" 
+    	c:name="activemq_spring_xml_annotations" />
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" 
+    	p:defaultDestination-ref="queueDestination" 
+    	p:connectionFactory-ref="connectionFactory" />
+
+    <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer" 
+    	p:connectionFactory-ref="connectionFactory" 
+    	p:destinationName="activemq_spring_xml_annotations" 
+    	p:messageListener-ref="messageReceiver" />
+    	
+</beans>
