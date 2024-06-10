@@ -75,6 +75,7 @@ public class MemberCtrl extends MemberCtrlCommon {
     	// 페이지 처리 부분
     	////////////////////////////////////////////////////////
     	List<Object> retObjList = pageConfiguration(memList, type);
+    	
    		model.addAttribute("curpage", (String)retObjList.get(0));
    		List<Member> jspSendMemList = getPageContent(retObjList);
    		////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@ package org.kitri.shoppingmall.controller.common.master;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kitri.shoppingmall.common.system.paging.APage;
 import org.kitri.shoppingmall.dto.master.Member;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +24,7 @@ public abstract class MemberCtrlCommon extends MasterCtrlCommon {
     	for(Member member : memList) {
     		objList.add((Object)member);
     	}
+    	
     	getPageImpl().initPageConfig(objList);
     	
     	if(type.equals("0")) {
@@ -30,6 +32,7 @@ public abstract class MemberCtrlCommon extends MasterCtrlCommon {
     	} else {
     		retObjList = (List<Object>)(getPageImpl().movePageProc(Integer.parseInt(type), objList));
     	}
+    	
     	
         return retObjList;    	
     	
